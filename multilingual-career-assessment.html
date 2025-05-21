@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P2P Career Archetype Assessment</title>
+    <style>
+        :root {
+            /* Light mode colors (default) */
+            --bg-primary: #f5f7fb;
+            --bg-container: #ffffff;
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --text: #212529;
+            --text-light: #6c757d;
+            --success: #4cc9f0;
+            --border: #e0e0e0;
+            --border-dark: #d0d0d0;
+            --option-bg: #f8f9fa;
+            --option-bg-hover: #f0f0f0;
+            --option-selected: rgba(67, 97, 238, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --shadow-color-sm: rgba(0, 0, 0, 0.05);
+            --prev-btn: #e0e0e0;
+            --prev-btn-hover: #d0d0d0;
+            --progress-bg: #e0e0e0;
+            --border-radius: 12px;
+        }
+        
+        [data-theme="dark"] {
+            /* Dark mode colors */
+            --bg-primary: #121212;
+            --bg-container: #1e1e1e;
+            --primary: #4f6bf2;
+            --secondary: #5c54e0;
+            --text: #e0e0e0;
+            --text-light: #a0a0a0;
+            --success: #4cc9f0;
+            --border: #333333;
+            --border-dark: #444444;
+            --option-bg: #262626;
+            --option-bg-hover: #2d2d2d;
+            --option-selected: rgba(79, 107, 242, 0.2);
+            --shadow-color: rgba(0, 0, 0, 0.2);
+            --shadow-color-sm: rgba(0, 0, 0, 0.15);
+            --prev-btn: #333333;
+            --prev-btn-hover: #3d3d3d;
+            --progress-bg: #333333;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 20px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--bg-container);
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 20px var(--shadow-color);
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: var(--primary);
+            text-align: center;
+        }
+        
+        h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: var(--secondary);
+        }
+        
+        .intro {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .intro p {
+            max-width: 600px;
+            margin: 0 auto 20px;
+        }
+        
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .question-container {
+            display: none;
+        }
+        
+        .question {
+            margin-bottom: 30px;
+            background-color: var(--bg-container);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 15px var(--shadow-color-sm);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .question h3 {
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .option {
+            padding: 15px;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            background-color: var(--option-bg);
+        }
+        
+        .option:hover {
+            background-color: var(--option-bg-hover);
+            border-color: var(--border-dark);
+        }
+        
+        .option.selected {
+            background-color: var(--option-selected);
+            border-color: var(--primary);
+        }
+        
+        .option input {
+            margin-right: 10px;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .prev-btn {
+            background-color: var(--prev-btn);
+            color: var(--text);
+        }
+        
+        .prev-btn:hover {
+            background-color: var(--prev-btn-hover);
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background-color: var(--progress-bg);
+            border-radius: 4px;
+            margin: 30px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary), var(--success));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .results-container {
+            display: none;
+            text-align: center;
+        }
+        
+        .results-header {
+            margin-bottom: 30px;
+        }
+        
+        .archetype {
+            margin-bottom: 25px;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            background-color: var(--option-bg);
+            box-shadow: 0 2px 10px var(--shadow-color-sm);
+            text-align: left;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .archetype-name {
+            font-size: 20px;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .share-section {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .share-section h3 {
+            margin-bottom: 15px;
+        }
+        
+        .animate-fade {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .restart-btn {
+            background-color: #6c757d;
+            margin-top: 20px;
+        }
+        
+        .restart-btn:hover {
+            background-color: #5a6268;
+        }
+        
+        .question-number {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px 0;
+        }
+        
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: var(--primary);
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        
+        /* Theme switcher styles */
+        .theme-switch-wrapper {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .theme-switch {
+            display: inline-block;
+            position: relative;
+            width: 60px;
+            height: 30px;
+        }
+        
+        .theme-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--border);
+            transition: 0.4s;
+            border-radius: 34px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+        
+        .slider:after {
+            content: "☀️";
+            position: absolute;
+            left: 8px;
+            top: 5px;
+            font-size: 12px;
+            display: block;
+        }
+        
+        input:checked + .slider:after {
+            content: "🌙";
+            right: 8px;
+            left: auto;
+        }
+
+        /* Language selector styles */
+        .language-selector {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            z-index: 100;
+        }
+        
+        .language-selector select {
+            padding: 6px 30px 6px 10px;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border);
+            background-color: var(--bg-container);
+            color: var(--text);
+            font-size: 14px;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23131313%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px top 50%;
+            background-size: 12px auto;
+            transition: all 0.2s ease;
+        }
+        
+        .language-selector select:hover {
+            border-color: var(--border-dark);
+        }
+        
+        [data-theme="dark"] .language-selector select {
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23e0e0e0%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Language selector -->
+        <div class="language-selector">
+            <select id="language-select">
+                <option value="en">English</option>
+                <option value="es">Español</option>
+                <option value="zh">中文</option>
+                <option value="fr">Français</option>
+                <option value="ko">한국어</option>
+                <option value="ja">日本語</option>
+            </select>
+        </div>
+        
+        <!-- Theme switcher -->
+        <div class="theme-switch-wrapper">
+            <label class="theme-switch" for="theme-toggle">
+                <input type="checkbox" id="theme-toggle" />
+                <span class="slider"></span>
+            </label>
+        </div>
+        
+        <div id="intro" class="intro animate-fade">
+            <h1 id="main-title">Discover Your Career Archetype</h1>
+            <p id="intro-p1">This assessment will help you identify your unique career archetype based on your natural strengths and preferences.</p>
+            <p id="intro-p2">Answer 5 quick questions to discover where your talents truly shine.</p>
+            <button id="start-btn" class="btn">Start Assessment</button>
+        </div>
+        
+        <div id="question-container" class="question-container">
+            <div class="progress-container">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
+            
+            <div id="question" class="question animate-fade">
+                <span id="question-number" class="question-number">Question 1 of 5</span>
+                <h3 id="question-text"></h3>
+                <div id="options" class="options"></div>
+            </div>
+            
+            <div class="navigation">
+                <button id="prev-btn" class="btn prev-btn">Previous</button>
+                <button id="next-btn" class="btn">Next</button>
+            </div>
+        </div>
+        
+        <div id="loading" class="loading">
+            <div class="loading-spinner"></div>
+            <p id="loading-text">Analyzing your responses...</p>
+        </div>
+        
+        <div id="results-container" class="results-container">
+            <div class="results-header animate-fade">
+                <h1 id="results-title">Your Top Career Archetypes</h1>
+                <p id="results-description">Based on your responses, here are the career archetypes that best match your strengths and preferences:</p>
+            </div>
+            
+            <div id="results" class="animate-fade"></div>
+            
+            <button id="restart-btn" class="btn restart-btn">Retake Assessment</button>
+            
+            <div class="share-section animate-fade">
+                <h3 id="share-title">Share Your Results</h3>
+                <p id="share-description">Invite friends to discover their archetype too!</p>
+                <button id="share-btn" class="btn">Share Assessment</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme switcher functionality
+        const themeToggle = document.getElementById('theme-toggle');
+        
+        // Check for saved user preference and set the theme
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            themeToggle.checked = true;
+        }
+        
+        // Apply theme when toggle is changed
+        themeToggle.addEventListener('change', function() {
+            if (this.checked) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+        
+        // Translations
+        const translations = {
+            en: {
+                title: "Discover Your Career Archetype",
+                introP1: "This assessment will help you identify your unique career archetype based on your natural strengths and preferences.",
+                introP2: "Answer 5 quick questions to discover where your talents truly shine.",
+                startBtn: "Start Assessment",
+                prev: "Previous",
+                next: "Next",
+                seeResults: "See Results",
+                questionNumber: "Question {0} of {1}",
+                loading: "Analyzing your responses...",
+                resultsTitle: "Your Top Career Archetypes",
+                resultsDescription: "Based on your responses, here are the career archetypes that best match your strengths and preferences:",
+                restartBtn: "Retake Assessment",
+                shareTitle: "Share Your Results",
+                shareDescription: "Invite friends to discover their archetype too!",
+                shareBtn: "Share Assessment",
+                noResults: "Based on your answers, we couldn't identify any strong archetypes. Try retaking the assessment and considering your responses carefully.",
+                options: ["Strongly Agree", "Agree", "Neutral", "Disagree", "Strongly Disagree"],
+                questions: [
+                    "I often generate new business or side hustle ideas.",
+                    "I prefer work that allows me to support others emotionally.",
+                    "I'm most productive with clear structure and systems.",
+                    "I'm known for leading with empathy.",
+                    "I love setting bold goals and hitting them."
+                ],
+                archetypes: {
+                    "Trailblazer Entrepreneur": "You're a natural innovator who sees opportunities where others don't. Your entrepreneurial spirit, combined with your drive to create new solutions, positions you well for starting ventures or leading new initiatives within organizations.",
+                    "Creative Maverick": "You approach problems with a unique perspective and thrive when you can express your creativity. Your ability to think outside the box makes you valuable in roles that require innovation and fresh thinking.",
+                    "Healing Alchemist": "You have a natural gift for supporting others through challenges and transformation. Your empathetic nature makes you excellent in roles focused on wellness, counseling, or helping others navigate difficult transitions.",
+                    "Visionary Coach": "You excel at seeing others' potential and guiding them toward success. Your ability to inspire and motivate makes you ideal for leadership, coaching, and mentoring roles.",
+                    "Grounded Architect": "You thrive on creating effective structures and systems. Your methodical approach to challenges makes you valuable in organizational design, project management, or any role requiring careful planning.",
+                    "Strategic Techie": "You combine analytical thinking with technological savvy. Your ability to develop systematic solutions positions you well for roles in technology, analysis, or strategic planning.",
+                    "Empathetic Architect": "You build systems and structures with a deep understanding of human needs. Your combination of empathy and organizational skills makes you excellent at creating people-centered processes and environments.",
+                    "Athletic Visionary": "You're driven by achievement and focused on results. Your goal-oriented nature and determination position you well for roles requiring leadership, strategy, and execution excellence."
+                }
+            },
+            es: {
+                title: "Descubre Tu Arquetipo Profesional",
+                introP1: "Esta evaluación te ayudará a identificar tu arquetipo profesional único basado en tus fortalezas y preferencias naturales.",
+                introP2: "Responde 5 preguntas rápidas para descubrir dónde brillan realmente tus talentos.",
+                startBtn: "Comenzar Evaluación",
+                prev: "Anterior",
+                next: "Siguiente",
+                seeResults: "Ver Resultados",
+                questionNumber: "Pregunta {0} de {1}",
+                loading: "Analizando tus respuestas...",
+                resultsTitle: "Tus Principales Arquetipos Profesionales",
+                resultsDescription: "Basado en tus respuestas, estos son los arquetipos profesionales que mejor se adaptan a tus fortalezas y preferencias:",
+                restartBtn: "Volver a Tomar la Evaluación",
+                shareTitle: "Comparte Tus Resultados",
+                shareDescription: "¡Invita a tus amigos a descubrir también su arquetipo!",
+                shareBtn: "Compartir Evaluación",
+                noResults: "Basado en tus respuestas, no pudimos identificar arquetipos fuertes. Intenta tomar la evaluación nuevamente y considera tus respuestas cuidadosamente.",
+                options: ["Totalmente de acuerdo", "De acuerdo", "Neutral", "En desacuerdo", "Totalmente en desacuerdo"],
+                questions: [
+                    "A menudo genero nuevas ideas de negocios o emprendimientos.",
+                    "Prefiero trabajos que me permitan apoyar emocionalmente a otros.",
+                    "Soy más productivo con estructuras y sistemas claros.",
+                    "Se me conoce por liderar con empatía.",
+                    "Me encanta establecer metas ambiciosas y alcanzarlas."
+                ],
+                archetypes: {
+                    "Trailblazer Entrepreneur": "Eres un innovador natural que ve oportunidades donde otros no las ven. Tu espíritu emprendedor, combinado con tu impulso para crear nuevas soluciones, te posiciona bien para iniciar proyectos o liderar nuevas iniciativas dentro de organizaciones.",
+                    "Creative Maverick": "Abordas los problemas con una perspectiva única y prosperas cuando puedes expresar tu creatividad. Tu capacidad para pensar fuera de lo común te hace valioso en roles que requieren innovación y pensamiento fresco.",
+                    "Healing Alchemist": "Tienes un don natural para apoyar a otros a través de desafíos y transformaciones. Tu naturaleza empática te hace excelente en roles enfocados en el bienestar, la consejería o ayudar a otros a navegar transiciones difíciles.",
+                    "Visionary Coach": "Sobresales al ver el potencial de otros y guiarlos hacia el éxito. Tu capacidad para inspirar y motivar te hace ideal para roles de liderazgo, coaching y mentoría.",
+                    "Grounded Architect": "Prosperas creando estructuras y sistemas efectivos. Tu enfoque metódico de los desafíos te hace valioso en diseño organizacional, gestión de proyectos o cualquier rol que requiera planificación cuidadosa.",
+                    "Strategic Techie": "Combinas el pensamiento analítico con la destreza tecnológica. Tu capacidad para desarrollar soluciones sistemáticas te posiciona bien para roles en tecnología, análisis o planificación estratégica.",
+                    "Empathetic Architect": "Construyes sistemas y estructuras con una profunda comprensión de las necesidades humanas. Tu combinación de empatía y habilidades organizativas te hace excelente en la creación de procesos y entornos centrados en las personas.",
+                    "Athletic Visionary": "Te impulsa el logro y te enfocas en los resultados. Tu naturaleza orientada a objetivos y determinación te posicionan bien para roles que requieren liderazgo, estrategia y excelencia en la ejecución."
+                }
+            },
+            zh: {
+                title: "发现你的职业原型",
+                introP1: "这项评估将帮助你根据自己的自然优势和偏好识别出独特的职业原型。",
+                introP2: "回答5个简短问题，发现你的才能真正闪耀的地方。",
+                startBtn: "开始评估",
+                prev: "上一步",
+                next: "下一步",
+                seeResults: "查看结果",
+                questionNumber: "问题 {0}/{1}",
+                loading: "正在分析你的回答...",
+                resultsTitle: "你的顶级职业原型",
+                resultsDescription: "根据你的回答，以下是最符合你的优势和偏好的职业原型：",
+                restartBtn: "重新评估",
+                shareTitle: "分享你的结果",
+                shareDescription: "邀请朋友也来发现他们的原型！",
+                shareBtn: "分享评估",
+                noResults: "根据你的回答，我们无法识别出明显的原型。请尝试重新进行评估并仔细考虑你的回答。",
+                options: ["非常同意", "同意", "中立", "不同意", "非常不同意"],
+                questions: [
+                    "我经常产生新的商业或副业想法。",
+                    "我喜欢能让我在情感上支持他人的工作。",
+                    "在明确的结构和系统中，我的效率最高。",
+                    "我以富有同理心的领导而闻名。",
+                    "我喜欢设定大胆的目标并实现它们。"
+                ],
+                archetypes: {
+                    "Trailblazer Entrepreneur": "你是一个天生的创新者，能看到别人看不到的机会。你的创业精神，加上创造新解决方案的动力，使你非常适合创办企业或在组织内领导新计划。",
+                    "Creative Maverick": "你用独特的视角处理问题，并在能够表达创造力时茁壮成长。你跳出框框思考的能力使你在需要创新和新鲜思维的角色中非常有价值。",
+                    "Healing Alchemist": "你天生就有支持他人度过挑战和转变的天赋。你的同理心让你在专注于健康、咨询或帮助他人度过困难转变的角色中表现出色。",
+                    "Visionary Coach": "你擅长看到他人的潜力并引导他们走向成功。你激励和激发动力的能力使你非常适合领导、指导和辅导角色。",
+                    "Grounded Architect": "你擅长创建有效的结构和系统。你面对挑战的条理性方法使你在组织设计、项目管理或任何需要仔细规划的角色中非常有价值。",
+                    "Strategic Techie": "你将分析思维与技术才能相结合。你开发系统解决方案的能力使你非常适合技术、分析或战略规划领域的角色。",
+                    "Empathetic Architect": "你建立系统和结构时深刻理解人类需求。你的同理心和组织技能相结合，使你擅长创建以人为中心的流程和环境。",
+                    "Athletic Visionary": "你受成就驱动并专注于结果。你的目标导向本质和决心使你非常适合需要领导力、战略和出色执行能力的角色。"
+                }
+            },
+            fr: {
+                title: "Découvrez Votre Archétype de Carrière",
+                introP1: "Cette évaluation vous aidera à identifier votre archétype de carrière unique basé sur vos forces et préférences naturelles.",
+                introP2: "Répondez à 5 questions rapides pour découvrir où brillent vraiment vos talents.",
+                startBtn: "Commencer l'Évaluation",
+                prev: "Précédent",
+                next: "Suivant",
+                seeResults: "Voir les Résultats",
+                questionNumber: "Question {0} sur {1}",
+                loading: "Analyse de vos réponses...",
+                resultsTitle: "Vos Principaux Archétypes de Carrière",
+                resultsDescription: "Selon vos réponses, voici les archétypes de carrière qui correspondent le mieux à vos forces et préférences :",
+                restartBtn: "Refaire l'Évaluation",
+                shareTitle: "Partagez Vos Résultats",
+                shareDescription: "Invitez vos amis à découvrir aussi leur archétype !",
+                shareBtn: "Partager l'Évaluation",
+                noResults: "Selon vos réponses, nous n'avons pas pu identifier d'archétypes forts. Essayez de refaire l'évaluation en considérant attentivement vos réponses.",
+                options: ["Tout à fait d'accord", "D'accord", "Neutre", "Pas d'accord", "Pas du tout d'accord"],
+                questions: [
+                    "Je génère souvent de nouvelles idées d'affaires ou de projets parallèles.",
+                    "Je préfère un travail qui me permet de soutenir les autres émotionnellement.",
+                    "Je suis plus productif avec une structure et des systèmes clairs.",
+                    "Je suis connu pour diriger avec empathie.",
+                    "J'aime fixer des objectifs audacieux et les atteindre."
+                ],
+                archetypes: {
+                    "Trailblazer Entrepreneur": "Vous êtes un innovateur naturel qui voit des opportunités là où d'autres ne les voient pas. Votre esprit entrepreneurial, combiné à votre envie de créer de nouvelles solutions, vous positionne bien pour démarrer des entreprises ou diriger de nouvelles initiatives au sein d'organisations.",
+                    "Creative Maverick": "Vous abordez les problèmes avec une perspective unique et vous vous épanouissez lorsque vous pouvez exprimer votre créativité. Votre capacité à penser de manière non conventionnelle vous rend précieux dans des rôles qui nécessitent innovation et pensée novatrice.",
+                    "Healing Alchemist": "Vous avez un don naturel pour soutenir les autres à travers les défis et les transformations. Votre nature empathique vous rend excellent dans des rôles axés sur le bien-être, le conseil ou l'aide aux autres à naviguer dans des transitions difficiles.",
+                    "Visionary Coach": "Vous excellez à voir le potentiel des autres et à les guider vers le succès. Votre capacité à inspirer et à motiver vous rend idéal pour des rôles de leadership, de coaching et de mentorat.",
+                    "Grounded Architect": "Vous prospérez en créant des structures et des systèmes efficaces. Votre approche méthodique des défis vous rend précieux dans la conception organisationnelle, la gestion de projet ou tout rôle nécessitant une planification minutieuse.",
+                    "Strategic Techie": "Vous combinez la pensée analytique avec le savoir-faire technologique. Votre capacité à développer des solutions systématiques vous positionne bien pour des rôles dans la technologie, l'analyse ou la planification stratégique.",
+                    "Empathetic Architect": "Vous construisez des systèmes et des structures avec une compréhension profonde des besoins humains. Votre combinaison d'empathie et de compétences organisationnelles vous rend excellent pour créer des processus et des environnements centrés sur les personnes.",
+                    "Athletic Visionary": "Vous êtes motivé par l'accomplissement et concentré sur les résultats. Votre nature orientée vers les objectifs et votre détermination vous positionnent bien pour des rôles nécessitant leadership, stratégie et excellence d'exécution."
+                }
+            },
+            ko: {
+                title: "당신의 커리어 원형 찾기",
+                introP1: "이 평가는 당신의 자연스러운 강점과 선호도를 기반으로 독특한 커리어 원형을 식별하는 데 도움이 됩니다.",
+                introP2: "5개의 빠른 질문에 답하여 당신의 재능이 진정으로 빛나는 곳을 발견하세요.",
+                startBtn: "평가 시작",
+                prev: "이전",
+                next: "다음",
+                seeResults: "결과 보기",
+                questionNumber: "질문 {0}/{1}",
+                loading: "응답 분석 중...",
+                resultsTitle: "당신의 주요 커리어 원형",
+                resultsDescription: "당신의 응답을 기반으로, 다음은 당신의 강점과 선호도에 가장 잘 맞는 커리어 원형입니다:",
+                restartBtn: "평가 다시 하기",
+                shareTitle: "결과 공유하기",
+                shareDescription: "친구들도 자신의 원형을 발견할 수 있도록 초대하세요!",
+                shareBtn: "평가 공유하기",
+                noResults: "당신의 응답을 기반으로, 강한 원형을 식별할 수 없었습니다. 평가를 다시 하고 응답을 신중하게 고려해보세요.",
+                options: ["매우 동의함", "동의함", "중립", "동의하지 않음", "전혀 동의하지 않음"],
+                questions: [
+                    "나는 종종 새로운 비즈니스나 부업 아이디어를 생각해낸다.",
+                    "나는 다른 사람들을 정서적으로 지원할 수 있는 일을 선호한다.",
+                    "나는 명확한 구조와 시스템이 있을 때 가장 생산적이다.",
+                    "나는 공감으로 이끄는 것으로 알려져 있다.",
+                    "나는 대담한 목표를 설정하고 달성하는 것을 좋아한다."
+                ],
+                archetypes: {
+                    "Trailblazer Entrepreneur": "당신은 다른 사람들이 보지 못하는 기회를 보는 천성적인 혁신가입니다. 당신의 기업가 정신과 새로운 해결책을 창출하는 원동력이 결합되어 벤처를 시작하거나 조직 내에서 새로운 이니셔티브를 이끄는 데 적합합니다.",
+                    "Creative Maverick": "당신은 독특한 관점으로 문제에 접근하며 창의력을 표현할 수 있을 때 번성합니다. 당신의 틀 밖의 사고 능력은 혁신과 새로운 사고가 필요한 역할에서 가치가 있습니다.",
+                    "Healing Alchemist": "당신은 도전과 변화를 통해 다른 사람들을 지원하는 천성적인 재능을 가지고 있습니다. 당신의 공감적 성향은 웰빙, 상담 또는 다른 사람들이 어려운 전환을 헤쳐나가는 데 도움을 주는 역할에서 탁월합니다.",
+                    "Visionary Coach": "당신은 다른 사람들의 잠재력을 보고 성공으로 이끄는 데 탁월합니다. 당신의 영감을 주고 동기를 부여하는 능력은 리더십, 코칭 및 멘토링 역할에 이상적입니다.",
+                    "Grounded Architect": "당신은 효과적인 구조와 시스템을 만드는 데 번성합니다. 당신의 체계적인 도전 접근법은 조직 설계, 프로젝트 관리 또는 신중한 계획이 필요한 모든 역할에서 가치가 있습니다.",
+                    "Strategic Techie": "당신은 분석적 사고와 기술적 지식을 결합합니다. 당신의 체계적인 해결책을 개발하는 능력은 기술, 분석 또는 전략적 계획에서의 역할에 적합합니다.",
+                    "Empathetic Architect": "당신은 인간의 필요에 대한 깊은 이해와 함께 시스템과 구조를 구축합니다. 당신의 공감과 조직적 능력의 조합은 사람 중심의 프로세스와 환경을 만드는 데 탁월합니다.",
+                    "Athletic Visionary": "당신은 성취에 의해 움직이며 결과에 집중합니다. 당신의 목표 지향적 성향과 결단력은 리더십, 전략 및 실행 우수성을 요구하는 역할에 적합합니다."
+                }
+            },
+            ja: {
+                title: "あなたのキャリアアーキタイプを発見する",
+                introP1: "この評価は、あなたの自然な強みと好みに基づいて、あなた独自のキャリアアーキタイプを特定するのに役立ちます。",
+                introP2: "5つの簡単な質問に答えて、あなたの才能が真に輝く場所を発見してください。",
+                startBtn: "評価を開始する",
+                prev: "前へ",
+                next: "次へ",
+                seeResults: "結果を見る",
+                questionNumber: "質問 {0}/{1}",
+                loading: "回答を分析中...",
+                resultsTitle: "あなたのトップキャリアアーキタイプ",
+                resultsDescription: "あなたの回答に基づいて、以下はあなたの強みと好みに最も適合するキャリアアーキタイプです：",
+                restartBtn: "評価をやり直す",
+                shareTitle: "結果を共有する",
+                shareDescription: "友達にも自分のアーキタイプを発見するよう招待しましょう！",
+                shareBtn: "評価を共有する",
+                noResults: "あなたの回答に基づいて、強いアーキタイプを特定できませんでした。評価をやり直して、回答を慎重に考慮してください。",
+                options: ["強く同意する", "同意する", "中立", "同意しない", "強く同意しない"],
+                questions: [
+                    "私はよく新しいビジネスやサイドハッスルのアイデアを生み出します。",
+                    "私は他者を感情的にサポートできる仕事を好みます。",
+                    "私は明確な構造とシステムがあるときに最も生産的です。",
+                    "私は共感をもってリードすることで知られています。",
+                    "私は大胆な目標を設定してそれを達成することが好きです。"
+                ],
+                archetypes: {
+                    "Trailblazer Entrepreneur": "あなたは他の人が見ない機会を見る自然な革新者です。あなたの起業家精神と新しい解決策を生み出す原動力が組み合わさって、ベンチャーを始めたり、組織内で新しい取り組みをリードしたりするのに適しています。",
+                    "Creative Maverick": "あなたはユニークな視点で問題に取り組み、創造性を表現できるとき最も成長します。あなたの枠にとらわれない思考能力は、革新と新しい思考を必要とする役割で価値があります。",
+                    "Healing Alchemist": "あなたは課題や変化を通じて他者をサポートする自然な才能を持っています。あなたの共感的な性質は、ウェルネス、カウンセリング、または他者が困難な移行をナビゲートするのを助ける役割で優れています。",
+                    "Visionary Coach": "あなたは他者の可能性を見て、成功に導くことに優れています。あなたの刺激し、動機付ける能力は、リーダーシップ、コーチング、メンタリングの役割に理想的です。",
+                    "Grounded Architect": "あなたは効果的な構造とシステムの創造に成長します。あなたの課題への体系的なアプローチは、組織設計、プロジェクト管理、または綿密な計画を必要とするあらゆる役割で価値があります。",
+                    "Strategic Techie": "あなたは分析的思考と技術的な知識を組み合わせます。あなたの体系的な解決策を開発する能力は、技術、分析、または戦略的計画の役割に適しています。",
+                    "Empathetic Architect": "あなたは人間のニーズを深く理解してシステムと構造を構築します。あなたの共感と組織的スキルの組み合わせは、人間中心のプロセスと環境を作るのに優れています。",
+                    "Athletic Visionary": "あなたは達成に動かされ、結果に焦点を当てています。あなたの目標指向の性質と決意は、リーダーシップ、戦略、および実行の優秀さを必要とする役割に適しています。"
+                }
+            }
+        };
+        
+        // Questions and scoring data
+        const questionsData = [
+            {
+                options: [
+                    { score: { "Trailblazer Entrepreneur": 2, "Creative Maverick": 1 } },
+                    { score: { "Trailblazer Entrepreneur": 1, "Creative Maverick": 0.5 } },
+                    { score: { } },
+                    { score: { } },
+                    { score: { } }
+                ]
+            },
+            {
+                options: [
+                    { score: { "Healing Alchemist": 2, "Visionary Coach": 1 } },
+                    { score: { "Healing Alchemist": 1, "Visionary Coach": 0.5 } },
+                    { score: { } },
+                    { score: { } },
+                    { score: { } }
+                ]
+            },
+            {
+                options: [
+                    { score: { "Grounded Architect": 2, "Strategic Techie": 1 } },
+                    { score: { "Grounded Architect": 1, "Strategic Techie": 0.5 } },
+                    { score: { } },
+                    { score: { } },
+                    { score: { } }
+                ]
+            },
+            {
+                options: [
+                    { score: { "Empathetic Architect": 2, "Healing Alchemist": 1 } },
+                    { score: { "Empathetic Architect": 1, "Healing Alchemist": 0.5 } },
+                    { score: { } },
+                    { score: { } },
+                    { score: { } }
+                ]
+            },
+            {
+                options: [
+                    { score: { "Athletic Visionary": 2, "Trailblazer Entrepreneur": 1 } },
+                    { score: { "Athletic Visionary": 1, "Trailblazer Entrepreneur": 0.5 } },
+                    { score: { } },
+                    { score: { } },
+                    { score: { } }
+                ]
+            }
+        ];
+        
+        // Archetype names in different languages
+        const archetypeTranslations = {
+            "Trailblazer Entrepreneur": {
+                es: "Emprendedor Pionero",
+                zh: "开拓者创业家",
+                fr: "Entrepreneur Pionnier",
+                ko: "개척자 기업가",
+                ja: "先駆者起業家"
+            },
+            "Creative Maverick": {
+                es: "Creativo Inconformista",
+                zh: "创意独行者",
+                fr: "Créatif Non-conformiste",
+                ko: "창의적 독립가",
+                ja: "創造的な独自路線者"
+            },
+            "Healing Alchemist": {
+                es: "Alquimista Sanador",
+                zh: "治愈炼金术士",
+                fr: "Alchimiste Guérisseur",
+                ko: "치유 연금술사",
+                ja: "治癒の錬金術師"
+            },
+            "Visionary Coach": {
+                es: "Coach Visionario",
+                zh: "远见教练",
+                fr: "Coach Visionnaire",
+                ko: "비전 코치",
+                ja: "ビジョナリーコーチ"
+            },
+            "Grounded Architect": {
+                es: "Arquitecto Práctico",
+                zh: "务实建筑师",
+                fr: "Architecte Pragmatique",
+                ko: "실용적 설계자",
+                ja: "実践的な建築家"
+            },
+            "Strategic Techie": {
+                es: "Técnico Estratégico",
+                zh: "战略技术专家",
+                fr: "Technicien Stratégique",
+                ko: "전략적 기술자",
+                ja: "戦略的なテクニシャン"
+            },
+            "Empathetic Architect": {
+                es: "Arquitecto Empático",
+                zh: "共情建筑师",
+                fr: "Architecte Empathique",
+                ko: "공감 설계자",
+                ja: "共感的な建築家"
+            },
+            "Athletic Visionary": {
+                es: "Visionario Atlético",
+                zh: "运动远见者",
+                fr: "Visionnaire Athlétique",
+                ko: "운동 비전가",
+                ja: "アスレチックビジョナリー"
+            }
+        };
+        
+        // Variables to track quiz state
+        let currentLanguage = 'en';
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let archetypeScores = {};
+        
+        // DOM elements
+        const languageSelect = document.getElementById('language-select');
+        const introSection = document.getElementById('intro');
+        const questionContainer = document.getElementById('question-container');
+        const questionNumber = document.getElementById('question-number');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options');
+        const prevButton = document.getElementById('prev-btn');
+        const nextButton = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const resultsContainer = document.getElementById('results-container');
+        const resultsDiv = document.getElementById('results');
+        const loadingSection = document.getElementById('loading');
+        
+        // Get translation function
+        function t(key, ...args) {
+            let text = translations[currentLanguage][key];
+            if (args.length > 0) {
+                for (let i = 0; i < args.length; i++) {
+                    text = text.replace(`{${i}}`, args[i]);
+                }
+            }
+            return text;
+        }
+        
+        // Initialize archetype scores
+        function initializeScores() {
+            Object.keys(translations.en.archetypes).forEach(archetype => {
+                archetypeScores[archetype] = 0;
+            });
+        }
+        
+        // Update UI language
+        function updateLanguage(lang) {
+            currentLanguage = lang;
+            document.getElementById('main-title').textContent = t('title');
+            document.getElementById('intro-p1').textContent = t('introP1');
+            document.getElementById('intro-p2').textContent = t('introP2');
+            document.getElementById('start-btn').textContent = t('startBtn');
+            document.getElementById('prev-btn').textContent = t('prev');
+            document.getElementById('next-btn').textContent = currentQuestionIndex === questionsData.length - 1 ? t('seeResults') : t('next');
+            document.getElementById('loading-text').textContent = t('loading');
+            document.getElementById('results-title').textContent = t('resultsTitle');
+            document.getElementById('results-description').textContent = t('resultsDescription');
+            document.getElementById('restart-btn').textContent = t('restartBtn');
+            document.getElementById('share-title').textContent = t('shareTitle');
+            document.getElementById('share-description').textContent = t('shareDescription');
+            document.getElementById('share-btn').textContent = t('shareBtn');
+            
+            // Update current question if any
+            if (questionContainer.style.display !== 'none') {
+                loadQuestion(currentQuestionIndex);
+            }
+            
+            // Update results if visible
+            if (resultsContainer.style.display !== 'none') {
+                updateResults();
+            }
+        }
+        
+        // Language selector event
+        languageSelect.addEventListener('change', function() {
+            updateLanguage(this.value);
+            document.documentElement.lang = this.value;
+        });
+        
+        // Start the quiz
+        document.getElementById('start-btn').addEventListener('click', () => {
+            introSection.style.display = 'none';
+            questionContainer.style.display = 'block';
+            initializeScores();
+            loadQuestion(0);
+        });
+        
+        // Load a question
+        function loadQuestion(index) {
+            questionNumber.textContent = t('questionNumber', index + 1, questionsData.length);
+            questionText.textContent = t('questions')[index];
+            
+            // Clear previous options
+            optionsContainer.innerHTML = '';
+            
+            // Add options
+            t('options').forEach((optionText, i) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                if (userAnswers[index] === i) {
+                    optionDiv.classList.add('selected');
+                }
+                
+                const radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = 'question-' + index;
+                radio.id = 'option-' + index + '-' + i;
+                radio.checked = userAnswers[index] === i;
+                
+                const label = document.createElement('label');
+                label.htmlFor = 'option-' + index + '-' + i;
+                label.textContent = optionText;
+                
+                optionDiv.appendChild(radio);
+                optionDiv.appendChild(label);
+                
+                optionDiv.addEventListener('click', () => {
+                    document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+                    optionDiv.classList.add('selected');
+                    radio.checked = true;
+                    userAnswers[index] = i;
+                });
+                
+                optionsContainer.appendChild(optionDiv);
+            });
+            
+            // Update navigation buttons
+            prevButton.style.visibility = index === 0 ? 'hidden' : 'visible';
+            nextButton.textContent = index === questionsData.length - 1 ? t('seeResults') : t('next');
+            
+            // Update progress bar
+            progressBar.style.width = `${((index + 1) / questionsData.length) * 100}%`;
+        }
+        
+        // Navigate to previous question
+        prevButton.addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion(currentQuestionIndex);
+            }
+        });
+        
+        // Navigate to next question or finish quiz
+        nextButton.addEventListener('click', () => {
+            if (userAnswers[currentQuestionIndex] === undefined) {
+                alert('Please select an answer before continuing.');
+                return;
+            }
+            
+            if (currentQuestionIndex < questionsData.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion(currentQuestionIndex);
+            } else {
+                finishQuiz();
+            }
+        });
+        
+        // Get localized archetype name
+        function getLocalizedArchetypeName(englishName) {
+            if (currentLanguage === 'en') {
+                return englishName;
+            }
+            
+            return archetypeTranslations[englishName][currentLanguage] || englishName;
+        }
+        
+        // Update results display
+        function updateResults() {
+            // Calculate scores
+            archetypeScores = {};
+            initializeScores();
+            
+            userAnswers.forEach((answerIndex, questionIndex) => {
+                const selectedOption = questionsData[questionIndex].options[answerIndex];
+                const scores = selectedOption.score;
+                
+                Object.keys(scores).forEach(archetype => {
+                    archetypeScores[archetype] = (archetypeScores[archetype] || 0) + scores[archetype];
+                });
+            });
+            
+            // Sort archetypes by score
+            const sortedArchetypes = Object.keys(archetypeScores)
+                .filter(archetype => archetypeScores[archetype] > 0)
+                .sort((a, b) => archetypeScores[b] - archetypeScores[a]);
+            
+            // Show top 3 archetypes or fewer if not enough scored
+            const topArchetypes = sortedArchetypes.slice(0, 3);
+            
+            // Display results
+            resultsDiv.innerHTML = '';
+            
+            // If no archetypes scored
+            if (topArchetypes.length === 0) {
+                resultsDiv.innerHTML = `<p>${t('noResults')}</p>`;
+                return;
+            }
+            
+            topArchetypes.forEach((archetype, index) => {
+                const archetypeDiv = document.createElement('div');
+                archetypeDiv.className = 'archetype animate-fade';
+                archetypeDiv.style.animationDelay = `${index * 0.2}s`;
+                
+                const archetypeName = document.createElement('div');
+                archetypeName.className = 'archetype-name';
+                archetypeName.textContent = `${index + 1}. ${getLocalizedArchetypeName(archetype)}`;
+                
+                const archetypeDesc = document.createElement('p');
+                archetypeDesc.textContent = t('archetypes')[archetype];
+                
+                archetypeDiv.appendChild(archetypeName);
+                archetypeDiv.appendChild(archetypeDesc);
+                resultsDiv.appendChild(archetypeDiv);
+            });
+        }
+        
+        // Calculate results and display them
+        function finishQuiz() {
+            questionContainer.style.display = 'none';
+            loadingSection.style.display = 'block';
+            
+            // Simulate loading
+            setTimeout(() => {
+                loadingSection.style.display = 'none';
+                resultsContainer.style.display = 'block';
+                updateResults();
+            }, 1500);
+        }
+        
+        // Restart the assessment
+        document.getElementById('restart-btn').addEventListener('click', () => {
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            initializeScores();
+            resultsContainer.style.display = 'none';
+            loadQuestion(0);
+            questionContainer.style.display = 'block';
+        });
+        
+        // Share functionality (basic implementation)
+        document.getElementById('share-btn').addEventListener('click', () => {
+            if (navigator.share) {
+                navigator.share({
+                    title: t('title'),
+                    text: t('introP1'),
+                    url: window.location.href
+                })
+                .catch(error => console.log('Error sharing:', error));
+            } else {
+                // Fallback for browsers that don't support navigator.share
+                prompt('Copy this link to share the assessment:', window.location.href);
+            }
+        });
+        
+        // Initialize language
+        updateLanguage(languageSelect.value);
+    </script>
+</body>
+</html>
